@@ -29,7 +29,7 @@ class GoogleOAuthProvider(OAuthAuthorizationServerProvider):
         self.tokens: dict[str, AccessToken] = {}
         self.state_mapping: dict[str, dict[str, str]] = {}
         # Store tokens with MCP tokens using the format:
-        # {"mcp_token": "adp_token"}
+        # {"mcp_token": "google_token"}
         self.token_mapping: dict[str, str] = {}
 
     async def get_client(self, client_id: str) -> OAuthClientInformationFull | None:
@@ -41,7 +41,7 @@ class GoogleOAuthProvider(OAuthAuthorizationServerProvider):
         self.clients[client_info.client_id] = client_info
 
     async def authorize(self, client: OAuthClientInformationFull, params: AuthorizationParams) -> str:
-        """Generate an authorization URL for GitHub OAuth flow."""
+        """Generate an authorization URL for Google OAuth flow."""
         state = params.state or secrets.token_hex(16)
 
         # Store the state mapping
@@ -65,7 +65,7 @@ class GoogleOAuthProvider(OAuthAuthorizationServerProvider):
         return auth_url
 
     async def handle_callback(self, code: str, state: str) -> str:
-        """Handle GitHub OAuth callback."""
+        """Handle Google OAuth callback."""
         state_data = self.state_mapping.get(state)
         if not state_data:
             raise HTTPException(400, "Invalid state parameter")
@@ -107,7 +107,7 @@ class GoogleOAuthProvider(OAuthAuthorizationServerProvider):
         )
         self.auth_codes[new_code] = auth_code
 
-        # Store GitHub token - we'll map the MCP token to this later
+        # Store Google token - we'll map the MCP token to this later
         self.tokens[token] = AccessToken(
             token=token,
             client_id=client_id,

@@ -47,7 +47,7 @@ def create_simple_mcp_server(settings: ServerSettings) -> FastMCP:
 
     @app.custom_route("/callback", methods=["GET"])
     async def callback_handler(request: Request) -> Response:
-        """Handle GitHub OAuth callback."""
+        """Handle Google OAuth callback."""
         code = request.query_params.get("code")
         state = request.query_params.get("state")
 
@@ -118,7 +118,7 @@ def create_simple_mcp_server(settings: ServerSettings) -> FastMCP:
     help="Transport protocol to use ('sse' or 'streamable-http')",
 )
 def main(port: int, host: str, transport: Literal["sse", "streamable-http"]) -> int:
-    """Run the simple GitHub MCP server."""
+    """Run the simple Google MCP server."""
     logging.basicConfig(level=logging.INFO)
 
     try:
